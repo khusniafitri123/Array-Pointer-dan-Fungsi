@@ -1,0 +1,75 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+int convertToNumericValue(char card[]) {
+    if (strcmp(card, "10") == 0) {
+        return 10;
+    } else if (strlen(card) == 1) {
+        if (card[0] >= '2' && card[0] <= '9') {
+            return card[0] - '0';
+        } else if (card[0] == 'J' || card[0] == 'j') {
+            return 11; 
+        } else if (card[0] == 'Q' || card[0] == 'q') {
+            return 12;
+        } else if (card[0] == 'K' || card[0] == 'k') {
+            return 13; 
+        }
+    }
+
+    printf("Nilai kartu tidak valid: %s\n", card);
+    exit(EXIT_FAILURE);
+}
+
+void swap(int *a, int *b) {
+    int temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+int countMinimumSteps(int cards[], int n) {
+    int steps = 0;
+    int i, j, min_index;
+
+    for (i = 0; i < n - 1; i++) {
+        min_index = i;
+        for (j = i + 1; j < n; j++) {
+            if (cards[j] < cards[min_index]) {
+                min_index = j;
+            }
+        }
+        if (min_index != i) {
+            swap(&cards[i], &cards[min_index]); 
+            steps++;
+        }
+    }
+
+    return steps;
+}
+
+int main() {
+    int n;
+    printf("Jumlah kartu: ");
+    scanf("%d", &n);
+
+    char inputCards[n][3]; 
+    int numericCards[n];    
+
+    printf("Masukkan nilai kartu: ");
+    for (int i = 0; i < n; i++) {
+        scanf("%s", inputCards[i]);
+        numericCards[i] = convertToNumericValue(inputCards[i]);
+    }
+
+    int steps = countMinimumSteps(numericCards, n);
+
+    printf("%d\n", n); 
+    for (int i = 0; i < n; i++) {
+        printf("%s ", inputCards[i]); 
+    }
+    printf("\n");
+
+    printf("%d\n", steps); 
+
+    return 0;
+}
